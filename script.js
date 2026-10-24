@@ -39,19 +39,32 @@
     year.textContent = String(new Date().getFullYear());
   }
 
-  document.querySelectorAll(".js-back-to-top, .logo").forEach((link) => {
+  const backTopFab = document.querySelector("#back-top-fab");
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    history.replaceState(null, "", "#top");
+  };
+
+  document.querySelectorAll(".logo").forEach((link) => {
     link.addEventListener("click", (event) => {
       const href = link.getAttribute("href");
       if (href !== "#top") return;
       event.preventDefault();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      history.replaceState(null, "", "#top");
+      scrollToTop();
     });
   });
 
+  backTopFab?.addEventListener("click", scrollToTop);
+
   const onScroll = () => {
-    if (!navbar) return;
-    navbar.classList.toggle("is-scrolled", window.scrollY > 24);
+    const scrolled = window.scrollY > 24;
+    if (navbar) navbar.classList.toggle("is-scrolled", scrolled);
+
+    if (backTopFab) {
+      backTopFab.hidden = false;
+      backTopFab.classList.toggle("is-visible", scrolled);
+    }
   };
 
   window.addEventListener("scroll", onScroll, { passive: true });
@@ -205,4 +218,132 @@
   };
 
   syncProfileImages();
+
+  /* Share */
+  const shareFab = document.querySelector("#share-fab");
+  const sharePanel = document.querySelector("#share-panel");
+  const shareBackdrop = document.querySelector("#share-backdrop");
+  const shareClose = document.querySelector("#share-close");
+  const shareToast = document.querySelector("#share-toast");
+  const nativeShareBtn = document.querySelector('[data-share="native"]');
+
+  const shareTitle = "Natasha Stella — Content Creator";
+  const shareText =
+    "Portofolio Natasha Stella — beauty, lifestyle & foodies. Cek rate card & kolaborasi:";
+
+  const getShareUrl = () => window.location.href.split("#")[0];
+
+  const showToast = (message) => {
+    if (!shareToast) return;
+    shareToast.textContent = message;
+    shareToast.hidden = false;
+    window.clearTimeout(showToast._timer);
+    showToast._timer = window.setTimeout(() => {
+      shareToast.hidden = true;
+    }, 2600);
+  };
+
+  const setShareOpen = (open) => {
+    if (!sharePanel || !shareFab || !shareBackdrop) return;
+    sharePanel.hidden = !open;
+    shareBackdrop.hidden = !open;
+    shareFab.setAttribute("aria-expanded", String(open));
+    document.body.style.overflow = open ? "hidden" : "";
+  };
+
+  const copyLink = async () => {
+    const url = getShareUrl();
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(url);
+      } else {
+        const input = document.createElement("input");
+        input.value = url;
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand("copy");
+        input.remove();
+      }
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  const shareNative = async () => {
+    if (!navigator.share) return false;
+    try {
+      await navigator.share({
+        title: shareTitle,
+        text: shareText,
+        url: getShareUrl(),
+      });
+      return true;
+    } catch (error) {
+      if (error?.name === "AbortError") return true;
+      return false;
+    }
+  };
+
+  if (nativeShareBtn && typeof navigator.share === "function") {
+    nativeShareBtn.hidden = false;
+  }
+
+  shareFab?.addEventListener("click", () => {
+    setShareOpen(sharePanel?.hidden !== false);
+  });
+
+  shareClose?.addEventListener("click", () => setShareOpen(false));
+  shareBackdrop?.addEventListener("click", () => setShareOpen(false));
+
+  window.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") setShareOpen(false);
+  });
+
+  document.querySelectorAll("[data-share]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const type = button.dataset.share;
+      const url = getShareUrl();
+      const message = `${shareText} ${url}`;
+
+      if (type === "native") {
+        const ok = await shareNative();
+        if (ok) setShareOpen(false);
+        return;
+      }
+
+      if (type === "copy") {
+        const ok = await copyLink();
+        showToast(ok ? "Link berhasil disalin" : "Gagal menyalin link");
+        return;
+      }
+
+      if (type === "whatsapp") {
+        window.open(
+          `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`,
+          "_blank",
+          "noopener,noreferrer"
+        );
+        setShareOpen(false);
+        return;
+      }
+
+      if (type === "instagram" || type === "tiktok") {
+        const ok = await copyLink();
+        const appUrl =
+          type === "instagram"
+            ? "https://www.instagram.com/"
+            : "https://www.tiktok.com/";
+        showToast(
+          ok
+            ? `Link disalin. Tempel di ${type === "instagram" ? "Instagram" : "TikTok"}.`
+            : "Gagal menyalin link"
+        );
+        window.setTimeout(() => {
+          window.open(appUrl, "_blank", "noopener,noreferrer");
+          setShareOpen(false);
+        }, 450);
+      }
+    });
+  });
 })();

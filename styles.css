@@ -519,9 +519,10 @@ img {
 
 .social-link {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.2rem;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.85rem 1.25rem;
   padding: 1.1rem 0;
   border-top: 1px solid var(--line);
   color: inherit;
@@ -537,6 +538,41 @@ img {
   padding-left: 0.35rem;
 }
 
+.social-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.social-icon {
+  display: grid;
+  place-items: center;
+  width: 2.55rem;
+  height: 2.55rem;
+  border-radius: 0.85rem;
+  flex-shrink: 0;
+}
+
+.social-icon svg {
+  display: block;
+}
+
+.social-icon-instagram {
+  background: linear-gradient(135deg, #f9ce34, #ee2a7b 50%, #6228d7);
+  color: #fff;
+}
+
+.social-icon-tiktok {
+  background: #111;
+  color: #fff;
+}
+
+.social-icon-threads {
+  background: #111;
+  color: #fff;
+}
+
 .social-name {
   font-family: var(--font-display);
   font-size: clamp(1.6rem, 5vw, 2.4rem);
@@ -548,10 +584,235 @@ img {
   font-size: 0.95rem;
   font-weight: 600;
   color: var(--ink-soft);
+  white-space: nowrap;
 }
 
 .social-link:hover .social-handle {
   color: inherit;
+}
+
+/* Share */
+.share-root {
+  position: relative;
+  z-index: 1040;
+}
+
+.back-top-fab {
+  position: fixed;
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: calc(max(1rem, env(safe-area-inset-bottom)) + 3.65rem);
+  z-index: 1042;
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255, 248, 250, 0.96);
+  color: var(--ink);
+  box-shadow: 0 10px 26px rgba(26, 18, 22, 0.14);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 0.28s var(--ease), transform 0.28s var(--ease),
+    visibility 0.28s var(--ease), background 0.25s var(--ease), color 0.25s var(--ease);
+}
+
+.back-top-fab.is-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: none;
+}
+
+.back-top-fab:hover {
+  background: var(--ink);
+  color: #fff;
+  border-color: var(--ink);
+}
+
+.back-top-fab[hidden] {
+  display: none !important;
+}
+
+.share-fab {
+  position: fixed;
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  z-index: 1042;
+  min-height: 3rem;
+  padding: 0.75rem 1.2rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--ink);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.92rem;
+  box-shadow: 0 12px 30px rgba(26, 18, 22, 0.22);
+  transition: transform 0.25s var(--ease), background 0.25s var(--ease);
+}
+
+.share-fab:hover {
+  background: var(--coral-deep);
+  transform: translateY(-2px);
+}
+
+.share-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1043;
+  background: rgba(26, 18, 22, 0.35);
+  backdrop-filter: blur(2px);
+}
+
+.share-panel {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: 1044;
+  width: min(420px, calc(100vw - 1.5rem));
+  max-height: min(85vh, 560px);
+  overflow-y: auto;
+  transform: translate(-50%, -50%);
+  padding: 1.15rem 1.15rem 1.25rem;
+  border-radius: 1.25rem;
+  background: rgba(255, 248, 250, 0.98);
+  border: 1px solid var(--line);
+  box-shadow: 0 20px 50px rgba(26, 18, 22, 0.18);
+}
+
+.share-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.35rem;
+}
+
+.share-panel-head h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  font-weight: 600;
+}
+
+.share-close {
+  width: 2.2rem;
+  height: 2.2rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.share-panel-lead {
+  margin: 0 0 1rem;
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+}
+
+.share-actions {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.share-action {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  width: 100%;
+  text-align: left;
+  padding: 0.8rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: #fff;
+  color: var(--ink);
+  transition: border-color 0.25s var(--ease), transform 0.25s var(--ease);
+}
+
+.share-action:hover {
+  border-color: rgba(212, 71, 102, 0.4);
+  transform: translateY(-1px);
+}
+
+.share-action-icon {
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 0.8rem;
+  background: #ffe4ec;
+  color: var(--coral-deep);
+  flex-shrink: 0;
+}
+
+.share-action-icon svg {
+  display: block;
+}
+
+.share-icon-native {
+  background: #efe7ea;
+  color: var(--ink);
+}
+
+.share-icon-copy {
+  background: #eceff3;
+  color: #3d4a5c;
+}
+
+.share-icon-whatsapp {
+  background: #e8f8ef;
+  color: #25d366;
+}
+
+.share-icon-instagram {
+  background: linear-gradient(135deg, #f9ce34, #ee2a7b 50%, #6228d7);
+  color: #fff;
+}
+
+.share-icon-tiktok {
+  background: #111;
+  color: #fff;
+}
+
+.share-action strong {
+  display: block;
+  font-size: 0.98rem;
+}
+
+.share-action small {
+  display: block;
+  margin-top: 0.1rem;
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+}
+
+.share-toast {
+  position: fixed;
+  left: 50%;
+  bottom: max(5.5rem, calc(env(safe-area-inset-bottom) + 5rem));
+  z-index: 1045;
+  transform: translateX(-50%);
+  max-width: min(90vw, 360px);
+  padding: 0.75rem 1rem;
+  border-radius: 999px;
+  background: var(--ink);
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-align: center;
+  box-shadow: 0 10px 28px rgba(26, 18, 22, 0.2);
+}
+
+.share-backdrop[hidden],
+.share-panel[hidden],
+.share-toast[hidden],
+.share-action[hidden] {
+  display: none !important;
 }
 
 /* Footer */
@@ -562,15 +823,6 @@ img {
   border-top: 1px solid var(--line);
   color: var(--ink-soft);
   font-size: 0.9rem;
-}
-
-.site-footer a {
-  font-weight: 600;
-  color: var(--ink);
-}
-
-.site-footer a:hover {
-  color: var(--coral);
 }
 
 /* Reveal — opacity only, avoid transform layout bugs */
@@ -605,12 +857,13 @@ img {
 }
 
 /* Tablet+ */
-@media (min-width: 576px) {
+@media (max-width: 575.98px) {
   .social-link {
-    flex-direction: row;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .social-handle {
+    margin-top: 0.35rem;
   }
 }
 
