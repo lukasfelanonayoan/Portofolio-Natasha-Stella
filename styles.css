@@ -305,6 +305,11 @@ img {
   font-size: clamp(0.98rem, 2.4vw, 1.05rem);
 }
 
+.about-photo-col {
+  display: flex;
+  justify-content: center;
+}
+
 .about-photo {
   width: min(220px, 56vw);
   aspect-ratio: 1;
@@ -320,6 +325,12 @@ img {
   object-fit: cover;
   object-position: center 20%;
   display: block;
+}
+
+@media (min-width: 768px) {
+  .about-photo-col {
+    justify-content: flex-start;
+  }
 }
 
 .about-badge {
@@ -659,6 +670,11 @@ img {
   transform: translateY(-2px);
 }
 
+/* Biar konten kolaborasi tidak ketimpa tombol Bagikan di HP */
+.section.collab {
+  padding-bottom: clamp(5rem, 14vw, 7rem);
+}
+
 .share-backdrop {
   position: fixed;
   inset: 0;
@@ -819,10 +835,25 @@ img {
 .site-footer {
   position: relative;
   z-index: 2;
-  padding: 1.5rem 0 2rem;
+  padding-top: 1.5rem;
+  padding-bottom: calc(5.75rem + env(safe-area-inset-bottom, 0px));
   border-top: 1px solid var(--line);
   color: var(--ink-soft);
   font-size: 0.9rem;
+}
+
+@media (min-width: 768px) {
+  .section.collab {
+    padding-bottom: clamp(4.5rem, 9vw, 7rem);
+  }
+
+  .site-footer {
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .about-row .col-lg-7 {
+    text-align: left;
+  }
 }
 
 /* Reveal — opacity only, avoid transform layout bugs */
