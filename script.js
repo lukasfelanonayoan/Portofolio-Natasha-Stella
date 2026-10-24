@@ -225,9 +225,7 @@
   const shareBackdrop = document.querySelector("#share-backdrop");
   const shareClose = document.querySelector("#share-close");
   const shareToast = document.querySelector("#share-toast");
-  const nativeShareBtn = document.querySelector('[data-share="native"]');
 
-  const shareTitle = "Natasha Stella — Content Creator";
   const shareText =
     "Portofolio Natasha Stella — beauty, lifestyle & foodies. Cek rate card & kolaborasi:";
 
@@ -270,25 +268,6 @@
     }
   };
 
-  const shareNative = async () => {
-    if (!navigator.share) return false;
-    try {
-      await navigator.share({
-        title: shareTitle,
-        text: shareText,
-        url: getShareUrl(),
-      });
-      return true;
-    } catch (error) {
-      if (error?.name === "AbortError") return true;
-      return false;
-    }
-  };
-
-  if (nativeShareBtn && typeof navigator.share === "function") {
-    nativeShareBtn.hidden = false;
-  }
-
   shareFab?.addEventListener("click", () => {
     setShareOpen(sharePanel?.hidden !== false);
   });
@@ -306,12 +285,6 @@
       const url = getShareUrl();
       const message = `${shareText} ${url}`;
 
-      if (type === "native") {
-        const ok = await shareNative();
-        if (ok) setShareOpen(false);
-        return;
-      }
-
       if (type === "copy") {
         const ok = await copyLink();
         showToast(ok ? "Link berhasil disalin" : "Gagal menyalin link");
@@ -325,24 +298,6 @@
           "noopener,noreferrer"
         );
         setShareOpen(false);
-        return;
-      }
-
-      if (type === "instagram" || type === "tiktok") {
-        const ok = await copyLink();
-        const appUrl =
-          type === "instagram"
-            ? "https://www.instagram.com/"
-            : "https://www.tiktok.com/";
-        showToast(
-          ok
-            ? `Link disalin. Tempel di ${type === "instagram" ? "Instagram" : "TikTok"}.`
-            : "Gagal menyalin link"
-        );
-        window.setTimeout(() => {
-          window.open(appUrl, "_blank", "noopener,noreferrer");
-          setShareOpen(false);
-        }, 450);
       }
     });
   });

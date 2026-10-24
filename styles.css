@@ -770,11 +770,6 @@ img {
   display: block;
 }
 
-.share-icon-native {
-  background: #efe7ea;
-  color: var(--ink);
-}
-
 .share-icon-copy {
   background: #eceff3;
   color: #3d4a5c;
@@ -783,16 +778,6 @@ img {
 .share-icon-whatsapp {
   background: #e8f8ef;
   color: #25d366;
-}
-
-.share-icon-instagram {
-  background: linear-gradient(135deg, #f9ce34, #ee2a7b 50%, #6228d7);
-  color: #fff;
-}
-
-.share-icon-tiktok {
-  background: #111;
-  color: #fff;
 }
 
 .share-action strong {
